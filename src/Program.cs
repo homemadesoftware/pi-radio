@@ -14,7 +14,7 @@ namespace pi_radio
             table.Add(19, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_two");
             table.Add(25, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_three");
             table.Add(31, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_fourfm");
-            table.Add(41, "http://stream.live.vc.bbcmedia.co.uk/bbc_6music");
+            table.Add(41, "https://radio-trtnagme.live.trt.com.tr/master_128_primary_1237474.aac");
             table.Add(49, "http://stream.live.vc.bbcmedia.co.uk/bbc_three_counties_radio");
             return table;
         }
