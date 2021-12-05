@@ -11,11 +11,11 @@ namespace pi_radio
         {
             SortedDictionary<int, string> table = new SortedDictionary<int, string>();
             table.Add(16, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_one");
-            table.Add(19, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_one");
-            table.Add(25, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_one");
-            table.Add(31, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_one");
-            table.Add(41, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_one");
-            table.Add(49, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_one");
+            table.Add(19, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_two");
+            table.Add(25, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_three");
+            table.Add(31, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_fourfm");
+            table.Add(41, "http://stream.live.vc.bbcmedia.co.uk/bbc_6music");
+            table.Add(49, "http://stream.live.vc.bbcmedia.co.uk/bbc_three_counties_radio");
             return table;
         }
 
