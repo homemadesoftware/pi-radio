@@ -65,7 +65,7 @@ namespace pi_radio
 
                         Console.WriteLine($"Volume: {volume}");
 
-                        int adjustedVolume = (int)((50 * Math.Pow(volume, 0.5) / 32) + 50);
+                        int adjustedVolume = (int)(100 * Math.Pow(volume, 0.5) / 32);
                         client.SetVolume(adjustedVolume);
                         lastVolume = volume;
                     }
