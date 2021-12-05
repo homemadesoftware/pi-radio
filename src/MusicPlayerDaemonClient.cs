@@ -66,6 +66,7 @@ namespace pi_radio
 				if (socket == null)
                 {
 					socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+					socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 				}
 
 				IPEndPoint endPoint = new IPEndPoint(IPAddress.Loopback, port);
@@ -120,10 +121,20 @@ namespace pi_radio
 
 		private void OnConnectEnd(IAsyncResult asyncResult)
         {
-			var state = (CompletionState)asyncResult.AsyncState;
-			state.Socket.EndConnect(asyncResult);
-			state.CompletionStatus = state.Socket.Connected ? 1 : 0;
-			state.HasCompleted.Set();
+			CompletionState state = (CompletionState)asyncResult.AsyncState;
+			try
+            {
+				state.Socket.EndConnect(asyncResult);
+				state.CompletionStatus = state.Socket.Connected ? 1 : 0;
+				state.HasCompleted.Set();
+			}
+			catch (Exception e)
+            {
+				Console.WriteLine(e);
+				state.CompletionStatus = 0;
+				state.HasCompleted.Set();
+			}
+			
 
 		}
 
