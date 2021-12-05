@@ -69,7 +69,7 @@ namespace pi_radio
 					socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 				}
 
-				IPEndPoint endPoint = new IPEndPoint(IPAddress.Loopback, port);
+				IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
 
 				try
 				{
