@@ -111,7 +111,14 @@ namespace pi_radio
 				catch (Exception e)
                 {
 					Console.WriteLine(e);
-					socket.Shutdown(SocketShutdown.Both);
+					try
+					{
+						socket.Shutdown(SocketShutdown.Both);
+					}
+					catch 
+					{
+
+					}
 					socket.Close();
 					socket = null;
 					return null;
