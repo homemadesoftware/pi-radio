@@ -57,6 +57,7 @@ namespace pi_radio
 
 		private string SendAndReceive(string data)
 		{
+			Console.WriteLine(data);
 			using (MemoryStream commandStream = new MemoryStream())
 			{
 				StreamWriter writer = new StreamWriter(commandStream);
@@ -100,11 +101,13 @@ namespace pi_radio
 						throw new ApplicationException("Failed to recv");
 					}
 
-					using (MemoryStream response = new MemoryStream(recvBuffer))
+					using (MemoryStream responseStream = new MemoryStream(recvBuffer))
                     {
-						using (StreamReader reader = new StreamReader(response))
+						using (StreamReader reader = new StreamReader(responseStream))
                         {
-							return reader.ReadToEnd();
+							string response = reader.ReadToEnd();
+							Console.WriteLine(response);
+							return response;
                         }
                     }
 				}

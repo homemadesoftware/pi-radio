@@ -14,7 +14,7 @@ namespace pi_radio
             table.Add(19, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_two");
             table.Add(25, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_three");
             table.Add(31, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_fourfm");
-            table.Add(41, "https://radio-trtnagme.live.trt.com.tr/master_128_primary_1237474.aac");
+            table.Add(41, "https://radio-trtnagme.live.trt.com.tr/master_128.m3u8");
             table.Add(49, "http://stream.live.vc.bbcmedia.co.uk/bbc_three_counties_radio");
             return table;
         }
@@ -50,7 +50,7 @@ namespace pi_radio
 
                         if (!lastOn.HasValue || onOff != lastOn.Value)
                         {
-                            Console.WriteLine($"n: {onOff}");
+                            Console.WriteLine($"on: {onOff}");
                             if (onOff)
                             {
                                 client.Play(lastChannel);
@@ -71,6 +71,7 @@ namespace pi_radio
                     }
 
                 }
+                System.Threading.Thread.Sleep(1000);
             }
         }
     }
