@@ -6,10 +6,6 @@
     <RootNamespace>pi_radio</RootNamespace>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>ARM64</PlatformTarget>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
