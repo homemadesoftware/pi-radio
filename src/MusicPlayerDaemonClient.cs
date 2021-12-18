@@ -24,7 +24,7 @@ namespace pi_radio
 			RunCommand("setvol", level.ToString());
 		}
 
-		public void SetChannel(int channel, string url)
+		public void SetChannels(IDictionary<int, string> channels)
 		{
 			string playlistName = "chx" + channel.ToString();
 			RunCommand("rm", playlistName);
@@ -41,16 +41,20 @@ namespace pi_radio
 		}
 
 
-		private string RunCommand(string command, string argument)
+		private string RunCommands(IList<string, string> commandEntries)
         {
 			StringBuilder builder = new StringBuilder();
 			builder.AppendLine("command_list_begin");
-			builder.Append(command);
-			if (!string.IsNullOrEmpty(argument))
+			foreach (var commandEntry in commandEntries)
 			{
-				builder.Append($" {argument}");
+				builder.Append(commandEntry.Item1);
+				if (!string.IsNullOrEmpty(commandEntry.Item2))
+				{
+					builder.Append($" {commandEntry.Item2}");
+				}
+				builder.AppendLine();
 			}
-			builder.AppendLine();
+			
 			builder.AppendLine("command_list_end");
 			return SendAndReceive(builder.ToString());
 		}
