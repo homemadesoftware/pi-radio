@@ -14,35 +14,49 @@ namespace pi_radio
 		private Socket socket;
 		private const int timeout = 15000;
 
-		public void SetOnOff(bool isOn)
+		public bool SetOnOff(bool isOn)
         {
-            RunCommand("pause", isOn.ToString());
+			return RunCommands(new[] 
+			{ 
+				new Tuple<string, string>("pause", isOn.ToString()) }
+			);
         }
 
-		public void SetVolume(int level)
+		public bool SetVolume(int level)
 		{
-			RunCommand("setvol", level.ToString());
+			return RunCommands(new[]
+			{
+				new Tuple<string, string>("setvol", level.ToString()) }
+			);
 		}
 
-		public void SetChannels(IDictionary<int, string> channels)
+		public bool SetChannels(IDictionary<int, string> channels)
+		{
+			List<Tuple<string, string>> commandList = new List<Tuple<string, string>>();
+			foreach (var channel in channels)
+            {
+				string playlistName = "chx" + channel.Key.ToString();
+				commandList.Add(new Tuple<string, string>("rm", playlistName));
+				commandList.Add(new Tuple<string, string>("playlistadd", playlistName + " " + channel.Value));
+			}
+			return RunCommands(commandList);
+		}
+
+
+		public bool Play(int channel)
 		{
 			string playlistName = "chx" + channel.ToString();
-			RunCommand("rm", playlistName);
-			RunCommand("playlistadd", playlistName + " " + url);
+			return RunCommands(new[]
+			{
+				new Tuple<string, string>("clear", ""),
+				new Tuple<string, string>("load", playlistName),
+				new Tuple<string, string>("play", "-1")
+			});
 		}
 
 
-		public void Play(int channel)
+		private bool RunCommands(IList<Tuple<string, string>> commandEntries)
 		{
-			string playlistName = "chx" + channel.ToString();
-			RunCommand("clear", "");
-			RunCommand("load", playlistName);
-			RunCommand("play", "-1");
-		}
-
-
-		private string RunCommands(IList<string, string> commandEntries)
-        {
 			StringBuilder builder = new StringBuilder();
 			builder.AppendLine("command_list_begin");
 			foreach (var commandEntry in commandEntries)
@@ -54,9 +68,9 @@ namespace pi_radio
 				}
 				builder.AppendLine();
 			}
-			
 			builder.AppendLine("command_list_end");
-			return SendAndReceive(builder.ToString());
+			string response = SendAndReceive(builder.ToString());
+			return response.Contains("OK");
 		}
 
 		private string SendAndReceive(string data)

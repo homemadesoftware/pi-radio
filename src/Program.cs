@@ -31,6 +31,7 @@ namespace pi_radio
 
             while (true)
             {
+                System.Threading.Thread.Sleep(1000);
                 if (monitor.Refresh())
                 {
                     bool onOff = monitor.IsOn;
@@ -44,8 +45,14 @@ namespace pi_radio
                         if (channel != lastChannel)
                         {
                             var channels = GetChannels();
-                            channels.ToList().ForEach(de => client.SetChannel(de.Key, de.Value));
-                            client.Play(channel);
+                            if (!client.SetChannels(channels))
+                            {
+                                continue;
+                            }
+                            if (!client.Play(channel))
+                            {
+                                continue;
+                            }
                             Console.WriteLine($"Playing Channel: {channel}");
                             lastChannel = channel;
                         }
@@ -55,7 +62,10 @@ namespace pi_radio
                             Console.WriteLine($"on: {onOff}");
                             if (onOff)
                             {
-                                client.Play(lastChannel);
+                                if (!client.Play(lastChannel))
+                                {
+                                    continue;
+                                }
                             }
                             else
                             {
@@ -68,12 +78,13 @@ namespace pi_radio
                         Console.WriteLine($"Volume: {volume}");
 
                         int adjustedVolume = (int)(100 * Math.Pow(volume, 0.5) / 32);
-                        client.SetVolume(adjustedVolume);
-                        lastVolume = volume;
+                        if (client.SetVolume(adjustedVolume))
+                        {
+                            lastVolume = volume;
+                        }
                     }
 
                 }
-                System.Threading.Thread.Sleep(1000);
             }
         }
     }
