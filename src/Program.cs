@@ -2,23 +2,14 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Net;
 
 namespace pi_radio
 {
     public class Program
     {
-        private static SortedDictionary<int, string> GetChannels()
-        {
-            SortedDictionary<int, string> table = new SortedDictionary<int, string>();
-            table.Add(16, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_one");
-            table.Add(19, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_two");
-            table.Add(25, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_three");
-            table.Add(31, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_fourfm");
-            table.Add(41, "https://radio-trtnagme.live.trt.com.tr/master_128.m3u8");
-            table.Add(49, "http://stream.live.vc.bbcmedia.co.uk/bbc_three_counties_radio");
-            return table;
-        }
-
+      
         public static void Main(string[] args)
         {
             bool? lastOn = null;
@@ -26,6 +17,12 @@ namespace pi_radio
             int lastChannel = -1;
 
             Console.WriteLine("Starting");
+
+            var channels = GetChannels();
+
+            WaitForChannelsOnNetwork(channels);
+
+            Console.WriteLine("Waited for channels");
 
             RadioHardwareMonitor monitor = new RadioHardwareMonitor();
 
@@ -44,7 +41,6 @@ namespace pi_radio
 
                         if (channel != lastChannel)
                         {
-                            var channels = GetChannels();
                             if (!client.SetChannels(channels))
                             {
                                 continue;
@@ -87,5 +83,57 @@ namespace pi_radio
                 }
             }
         }
+
+        private static void WaitForChannelsOnNetwork(SortedDictionary<int, string> channels)
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                foreach (var entry in channels)
+                {
+                    Task resolver = Resolve(entry.Value);
+                    tasks.Add(resolver);
+                }
+                Task.WaitAll(tasks.ToArray(), 60000);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Failed to wait for channels. {e}");
+            }
+            
+        }
+
+        private static async Task Resolve(string url)
+        {
+            Uri uri = new Uri(url);
+
+            for (int i = 0; i < 6; ++i)
+            {
+                try
+                {
+                    await Dns.GetHostAddressesAsync(uri.Host);
+                    return;
+                }
+                catch (System.Net.Sockets.SocketException se)
+                {
+                    await Task.Delay(10000);
+                    continue;
+                }
+            }
+        }
+
+        private static SortedDictionary<int, string> GetChannels()
+        {
+            SortedDictionary<int, string> table = new SortedDictionary<int, string>();
+            table.Add(16, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_one");
+            table.Add(19, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_two");
+            table.Add(25, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_three");
+            table.Add(31, "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_fourfm");
+            table.Add(41, "https://radio-trtnagme.live.trt.com.tr/master_128.m3u8");
+            table.Add(49, "http://stream.live.vc.bbcmedia.co.uk/bbc_three_counties_radio");
+            return table;
+        }
+
+
     }
 }
