@@ -1,11 +1,13 @@
 ## This file should be placed at /lib/systemd/system/pi-radio.service
 ## You can copy with:> sudo cp pi-radio.service /lib/systemd/system/pi-radio.service
 ## Then reload the daemon to read the file:> sudo systemctl daemon-reload
+## Enable the service:> sudo systemctl enable pi-radio.service
 ## Start the service:> sudo systemctl start pi-radio.service
 
 [Unit]
 Description=Raspberry Pi Radio
-After=multi-user.target mpd.service
+After=mpd.service mpd.socket.service network-online.target
+Wants=mpd.service mpd.socket.service network-online.target
 
 [Service]
 ExecStart=/home/pi/dotnet/dotnet /home/pi/pi-radio/src/bin/Debug/net6.0/pi-radio.dll
