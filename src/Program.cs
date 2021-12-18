@@ -25,6 +25,8 @@ namespace pi_radio
             int lastVolume = -1;
             int lastChannel = -1;
 
+            Console.WriteLine("Starting");
+
             RadioHardwareMonitor monitor = new RadioHardwareMonitor();
 
             while (true)
